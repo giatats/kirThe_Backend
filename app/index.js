@@ -22,14 +22,17 @@ export default function TemperatureDashboard() {
 
   const fetchData = async () => {
     try {
-      // Replace with your Vercel deployment URL after deployment
-      fetch('https://kir-the-backend-k4p87m6x0-gtatsoglou-9344s-projects.vercel.app/api/temperature')
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/temperature`
+      );
+
       const result = await response.json();
-      
+
       if (result.success && result.data.length > 0) {
         setData(result.data);
         calculateStats(result.data);
       }
+
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -38,7 +41,10 @@ export default function TemperatureDashboard() {
   };
 
   const calculateStats = (readings) => {
+    if (!readings || readings.length === 0) return;
+
     const temps = readings.map(r => r.temperature);
+
     setStats({
       current: readings[readings.length - 1],
       min: Math.min(...temps),
