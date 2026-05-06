@@ -23,7 +23,7 @@ export default function TemperatureDashboard() {
   const fetchData = async () => {
     try {
       // Replace with your Vercel deployment URL after deployment
-      const response = await fetch('/api/temperature');
+      fetch('https://kir-the-backend-k4p87m6x0-gtatsoglou-9344s-projects.vercel.app/api/temperature')
       const result = await response.json();
       
       if (result.success && result.data.length > 0) {
