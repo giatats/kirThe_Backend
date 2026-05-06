@@ -22,10 +22,7 @@ export default function TemperatureDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/temperature`
-      );
-
+      const response = await fetch('/api/temperature')
       const result = await response.json();
 
       if (result.success && result.data.length > 0) {
