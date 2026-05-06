@@ -1,32 +1,12 @@
 let temperatureData = [];
 
-// GET → frontend fetch
-export async function GET() {
-  return Response.json({
-    success: true,
-    count: temperatureData.length,
-    data: temperatureData
-  });
-}
-
-// POST → ESP32 sends data
 export async function POST(req) {
-  const body = await req.json();
+  const payload = await req.text();
 
-  const payload = body.data || body;
-
-  let temperature, date, time;
-
-  if (typeof payload === "string") {
-    const parts = payload.split("|");
-    temperature = parseFloat(parts[0]);
-    date = parts[1];
-    time = parts[2];
-  } else {
-    temperature = payload.temperature;
-    date = payload.date;
-    time = payload.time;
-  }
+  const parts = payload.split('|');
+  const temperature = parseFloat(parts[0]);
+  const date = parts[1];
+  const time = parts[2];
 
   const entry = {
     temperature,
@@ -43,12 +23,13 @@ export async function POST(req) {
 
   return Response.json({
     success: true,
-    message: "Temperature recorded",
     entry
   });
 }
 
-// OPTIONS (CORS preflight)
-export async function OPTIONS() {
-  return new Response(null, { status: 200 });
+export async function GET() {
+  return Response.json({
+    success: true,
+    data: temperatureData
+  });
 }
