@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { Thermometer, Activity, TrendingUp, Clock } from 'lucide-react';
+import TemperatureChart from "./components/TemperatureChart";
 
 export default function TemperatureDashboard() {
   const [data, setData] = useState([]);
@@ -275,63 +276,7 @@ export default function TemperatureDashboard() {
             </div>
 
             {/* Chart */}
-            <div style={{
-              background: 'rgba(255,255,255,0.03)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '24px',
-              padding: '36px 28px',
-              marginBottom: '32px'
-            }}>
-              <h3 style={{
-                fontSize: '20px',
-                fontWeight: '600',
-                marginBottom: '28px',
-                color: '#e8eaf6',
-                letterSpacing: '-0.5px'
-              }}>
-                Temperature History (Last 50 Readings)
-              </h3>
-              <ResponsiveContainer width="100%" height={320}>
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#ff6b6b" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#ff6b6b" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="#5a5f7d"
-                    style={{ fontSize: '12px' }}
-                    tickLine={false}
-                  />
-                  <YAxis 
-                    stroke="#5a5f7d"
-                    style={{ fontSize: '12px' }}
-                    tickLine={false}
-                    domain={['dataMin - 1', 'dataMax + 1']}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      background: 'rgba(10,14,39,0.95)',
-                      border: '1px solid rgba(255,107,107,0.3)',
-                      borderRadius: '12px',
-                      color: '#e8eaf6',
-                      fontSize: '14px'
-                    }}
-                    formatter={(value) => [`${value}°C`, 'Temperature']}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="temp" 
-                    stroke="#ff6b6b" 
-                    strokeWidth={3}
-                    fill="url(#tempGradient)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <TemperatureChart data={data} />
 
             {/* Recent Readings Table */}
             <div style={{
