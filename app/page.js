@@ -11,6 +11,14 @@ export default function TemperatureDashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const formatDateToDDMMYY = (isoDate) => {
+    if (!isoDate) return null;
+
+    const [year, month, day] = isoDate.split("-");
+
+    return `${day}/${month}/${year.slice(-2)}`;
+  };
+
   const [stats, setStats] = useState({
     current: null,
     min: null,
@@ -33,7 +41,8 @@ export default function TemperatureDashboard() {
       let url = '/api/temperature';
 
       if (date) {
-        url += `?date=${date}`;
+        const formattedDate = formatDateToDDMMYY(date);
+        url += `?date=${encodeURIComponent(formattedDate)}`;
       }
 
       console.log('🔍 Fetching URL:', url);
