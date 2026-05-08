@@ -11,37 +11,37 @@ import {
 } from "recharts";
 
 export default function TemperatureChart({ data }) {
-  if (!data || data.length === 0) {
-    return null;
+  console.log("CHART DATA:", data);
+
+  if (!Array.isArray(data)) {
+    return <div style={{ color: "red" }}>No chart data (not array)</div>;
   }
 
-  const chartData = data
-    .slice(-50)
-    .map((item) => ({
-      name: item.time || "—",
-      temp: Number(item.temperature)
-    }));
+  if (data.length === 0) {
+    return <div style={{ color: "#aaa" }}>No data for chart</div>;
+  }
+
+  const chartData = data.map((item) => ({
+    name: item.time,
+    temp: Number(item.temperature)
+  }));
 
   return (
-    <div style={{ width: "100%", height: 320, marginTop: 20 }}>
+    <div style={{
+      width: "100%",
+      height: 400,
+      background: "rgba(255,255,255,0.02)",
+      borderRadius: 12,
+      padding: 10
+    }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
 
-          <XAxis
-            dataKey="name"
-            tick={{ fontSize: 12 }}
-          />
-
+          <XAxis dataKey="name" />
           <YAxis />
 
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#1a1f3a",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#fff"
-            }}
-          />
+          <Tooltip />
 
           <Area
             type="monotone"

@@ -237,9 +237,11 @@ export default function TemperatureDashboard() {
             </div>
 
             {/* GRAPH */}
-            <TemperatureChart data={data} />
+            <div style={{ marginTop: 40 }}>
+              <TemperatureChart data={data} />
+            </div>
 
-            {/* TABLE */}
+            {/* TABLE
             <div style={{ marginTop: 40 }}>
               <h3>Readings ({selectedDate})</h3>
 
@@ -261,7 +263,7 @@ export default function TemperatureDashboard() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </div> */}
           </>
         )}
       </div>
