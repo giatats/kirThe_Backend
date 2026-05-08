@@ -70,12 +70,25 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(req) {
   try {
-    const { data, error } = await supabase
+    // Extract the date query parameter
+    const { searchParams } = new URL(req.url);
+    const dateParam = searchParams.get("date");
+
+    let query = supabase
       .from("temperature")
-      .select("*")
-      .order("timestamp", { ascending: false });
+      .select("*");
+
+    // Filter by date if provided
+    if (dateParam) {
+      query = query.eq("date", dateParam);
+    }
+
+    // Order by timestamp descending
+    query = query.order("timestamp", { ascending: false });
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("❌ GET error:", error);
@@ -85,6 +98,8 @@ export async function GET() {
         { status: 500 }
       );
     }
+
+    console.log(`✅ GET successful: ${data.length} records for date: ${dateParam || 'all'}`);
 
     return Response.json({
       success: true,
