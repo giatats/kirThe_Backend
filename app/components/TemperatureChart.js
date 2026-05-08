@@ -14,15 +14,15 @@ export default function TemperatureChart({ data }) {
     return null;
   }
 
-  // Prepare chart data
+  // Reverse data so oldest → newest
   const chartData = [...data]
     .reverse()
     .map((item) => ({
-        time: item.time,
-        temperature: Number(Number(item.temperature).toFixed(1))
+      time: item.time,
+      temperature: Number(Number(item.temperature).toFixed(1))
     }));
 
-  // Calculate axis limits
+  // Calculate Y-axis limits
   const temps = chartData.map((d) => d.temperature);
 
   const minTemp = Math.floor(Math.min(...temps)) - 1;
@@ -50,7 +50,7 @@ export default function TemperatureChart({ data }) {
           top: 20,
           right: 30,
           left: 30,
-          bottom: 40
+          bottom: 50
         }}
       >
         {/* Grid */}
@@ -59,22 +59,24 @@ export default function TemperatureChart({ data }) {
           opacity={0.15}
         />
 
-        {/* X Axis = Time */}
+        {/* X Axis */}
         <XAxis
           dataKey="time"
           stroke="#e8eaf6"
           tick={{ fill: "#e8eaf6", fontSize: 12 }}
           axisLine={{ stroke: "#e8eaf6" }}
           tickLine={{ stroke: "#e8eaf6" }}
+          interval="preserveStartEnd"
           label={{
             value: "Time",
-            position: "insideBottom",
-            offset: -15,
-            fill: "#e8eaf6"
+            position: "bottom",
+            offset: 20,
+            fill: "#e8eaf6",
+            fontSize: 14
           }}
         />
 
-        {/* Y Axis = Temperature */}
+        {/* Y Axis */}
         <YAxis
           stroke="#e8eaf6"
           domain={[minTemp, maxTemp]}
@@ -86,7 +88,8 @@ export default function TemperatureChart({ data }) {
             value: "Temperature (°C)",
             angle: -90,
             position: "insideLeft",
-            fill: "#e8eaf6"
+            fill: "#e8eaf6",
+            fontSize: 14
           }}
         />
 
@@ -102,7 +105,7 @@ export default function TemperatureChart({ data }) {
           }}
         />
 
-        {/* Temperature Line */}
+        {/* Line */}
         <Line
           type="monotone"
           dataKey="temperature"
