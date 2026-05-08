@@ -1,11 +1,15 @@
-let temperatureData = [];
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 export async function POST(req) {
   const contentType = req.headers.get("content-type") || "";
 
   let temperature, date, time;
 
-  // handle JSON
   if (contentType.includes("application/json")) {
     const body = await req.json();
 
@@ -19,9 +23,7 @@ export async function POST(req) {
       date = body.date;
       time = body.time;
     }
-  } 
-  // handle plain text (ESP32 often sends this)
-  else {
+  } else {
     const text = await req.text();
     const parts = text.split("|");
 
@@ -30,26 +32,32 @@ export async function POST(req) {
     time = parts[2];
   }
 
-  const entry = {
-    temperature,
-    date,
-    time,
-    timestamp: new Date().toISOString()
-  };
+  const { data, error } = await supabase
+    .from("temperature")
+    .insert([{ temperature, date, time }])
+    .select()
+    .single();
 
-  temperatureData.push(entry);
-
-  if (temperatureData.length > 1000) {
-    temperatureData = temperatureData.slice(-1000);
+  if (error) {
+    return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 
-  return Response.json({ success: true, entry });
+  return Response.json({ success: true, entry: data });
 }
 
 export async function GET() {
+  const { data, error } = await supabase
+    .from("temperature")
+    .select("*")
+    .order("timestamp", { ascending: false });
+
+  if (error) {
+    return Response.json({ success: false, error: error.message }, { status: 500 });
+  }
+
   return Response.json({
     success: true,
-    count: temperatureData.length,
-    data: temperatureData
+    count: data.length,
+    data
   });
 }
