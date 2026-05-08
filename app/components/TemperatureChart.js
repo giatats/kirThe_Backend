@@ -15,10 +15,12 @@ export default function TemperatureChart({ data }) {
   }
 
   // Prepare chart data
-  const chartData = data.map((item) => ({
-    time: item.time,
-    temperature: Number(Number(item.temperature).toFixed(1))
-  }));
+  const chartData = [...data]
+    .reverse()
+    .map((item) => ({
+        time: item.time,
+        temperature: Number(Number(item.temperature).toFixed(1))
+    }));
 
   // Calculate axis limits
   const temps = chartData.map((d) => d.temperature);
