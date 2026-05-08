@@ -62,20 +62,11 @@ export default function TemperatureChart({ data }) {
           opacity={0.15}
         />
 
-        {/* X Axis */}
-        <XAxis
-            dataKey="time"
-            tick={{ fill: "#e8eaf6", fontSize: 11 }}
-            axisLine={{ stroke: "#e8eaf6" }}
-            tickLine={{ stroke: "#e8eaf6" }}
-            padding={{ left: 20, right: 20 }}
-            height={70}
-            angle={-40}
-            textAnchor="end"
-        />
-
         {/* Y Axis */}
         <YAxis
+            yAxisId="left"
+            orientation="left"
+            type="number"
             stroke="#e8eaf6"
             domain={[minTemp, maxTemp]}
             tickCount={6}
@@ -89,9 +80,22 @@ export default function TemperatureChart({ data }) {
                 angle: -90,
                 position: "insideLeft",
                 fill: "#e8eaf6",
-                fontSize: 14,
-                dy: 0
+                fontSize: 14
             }}
+        />
+
+        {/* X Axis */}
+        <XAxis
+            xAxisId="bottom"
+            orientation="bottom"
+            type="category"
+            dataKey="time"
+            tick={{ fill: "#e8eaf6", fontSize: 11 }}
+            axisLine={{ stroke: "#e8eaf6" }}
+            tickLine={{ stroke: "#e8eaf6" }}
+            height={70}
+            angle={-40}
+            textAnchor="end"
         />
 
         {/* Tooltip */}
@@ -108,12 +112,13 @@ export default function TemperatureChart({ data }) {
 
         {/* Line */}
         <Line
+          yAxisId="left"
+          xAxisId="bottom"
           type="monotone"
           dataKey="temperature"
           stroke="#ff6b6b"
           strokeWidth={5}
           isAnimationActive={false}
-          strokeOpacity={1}
           dot={{
             r: 8,
             fill: "#ff6b6b",
