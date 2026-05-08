@@ -74,7 +74,7 @@ export default function TemperatureChart({ data }) {
             stroke="#e8eaf6"
             domain={[minTemp, maxTemp]}
             tickCount={6}
-            interval={0}
+            interval="preserveStartEnd"
             tick={{ fill: "#e8eaf6", fontSize: 12 }}
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
