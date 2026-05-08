@@ -11,23 +11,20 @@ import {
 } from "recharts";
 
 export default function TemperatureChart({ data }) {
-  // ✅ guard against empty / undefined data
-  if (!Array.isArray(data) || data.length === 0) return null;
+  if (!data || data.length === 0) {
+    return null;
+  }
 
   const chartData = data
-    .slice() // avoid mutating original
     .slice(-50)
     .map((item) => ({
-      name: item.time || "",
-      temp: Number(item.temperature) // ensure numeric
-    }))
-    .filter((d) => d.name !== "");
-
-  if (chartData.length === 0) return null;
+      name: item.time || "—",
+      temp: Number(item.temperature)
+    }));
 
   return (
-    <div style={{ width: "100%", height: 320 }}>
-      <ResponsiveContainer>
+    <div style={{ width: "100%", height: 320, marginTop: 20 }}>
+      <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
 
