@@ -6,8 +6,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
-  ResponsiveContainer
+  CartesianGrid
 } from "recharts";
 
 export default function TemperatureChart({ data }) {
@@ -29,30 +28,32 @@ export default function TemperatureChart({ data }) {
   const minTemp = Math.floor(Math.min(...temps)) - 1;
   const maxTemp = Math.ceil(Math.max(...temps)) + 1;
 
+  const chartWidth = Math.max(900, chartData.length * 140);
+
   return (
     <div
       style={{
         width: "100%",
+        overflowX: "auto",
         background: "rgba(255,255,255,0.04)",
         borderRadius: "20px",
         padding: "20px",
         border: "1px solid rgba(255,255,255,0.08)",
         marginTop: "20px",
-        overflowX: "auto",
-        display: "flex",
-        justifyContent: "center"
+        minWidth: 0
       }}
     >
-      <ResponsiveContainer width="100%" height={420}>
-        <LineChart
-          data={chartData}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 30,
-            bottom: 50
-          }}
-        >
+      <LineChart
+        width={chartWidth}
+        height={420}
+        data={chartData}
+        margin={{
+          top: 20,
+          right: 30,
+          left: 30,
+          bottom: 50
+        }}
+      >
           {/* Grid */}
         <CartesianGrid
           strokeDasharray="3 3"
@@ -121,7 +122,6 @@ export default function TemperatureChart({ data }) {
           }}
         />
       </LineChart>
-      </ResponsiveContainer>
     </div>
   );
 }
