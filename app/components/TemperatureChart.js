@@ -1,39 +1,120 @@
 "use client";
 
+import { useMemo } from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-  CartesianGrid
-} from "recharts";
+  Legend,
+  Filler
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 export default function TemperatureChart({ data }) {
   if (!data || data.length === 0) {
     return null;
   }
 
-  // Reverse data so oldest → newest
-  const chartData = [...data]
-    .reverse()
-    .map((item) => ({
-      time: item.time,
-      temperature: Number(Number(item.temperature).toFixed(1))
-    }));
+  const chartData = useMemo(() => {
+    const reversed = [...data].reverse();
+    return {
+      labels: reversed.map((item) => item.time),
+      datasets: [
+        {
+          label: "Temperature (°C)",
+          data: reversed.map((item) => Number(Number(item.temperature).toFixed(1))),
+          borderColor: "#ff6b6b",
+          backgroundColor: "rgba(255,107,107,0.16)",
+          pointBackgroundColor: "#ff6b6b",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          tension: 0.4,
+          fill: true,
+          borderWidth: 3
+        }
+      ]
+    };
+  }, [data]);
 
-  // Calculate Y-axis limits
-  const temps = chartData.map((d) => d.temperature);
+  const temps = chartData.datasets[0].data;
   const minTemp = Math.floor(Math.min(...temps)) - 1;
   const maxTemp = Math.ceil(Math.max(...temps)) + 1;
 
-  const chartWidth = Math.max(900, chartData.length * 140);
+  const options = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.parsed.y} °C`
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Time",
+            color: "#e8eaf6",
+            font: { size: 13 }
+          },
+          ticks: {
+            color: "#e8eaf6",
+            maxRotation: 45,
+            minRotation: 45,
+            autoSkip: true,
+            maxTicksLimit: 8
+          },
+          grid: {
+            color: "rgba(255,255,255,0.08)"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Temperature (°C)",
+            color: "#e8eaf6",
+            font: { size: 13 }
+          },
+          ticks: {
+            color: "#e8eaf6"
+          },
+          grid: {
+            color: "rgba(255,255,255,0.08)"
+          },
+          min: minTemp,
+          max: maxTemp
+        }
+      }
+    }),
+    [minTemp, maxTemp]
+  );
 
   return (
     <div
       style={{
         width: "100%",
-        overflowX: "auto",
+        height: "460px",
         background: "rgba(255,255,255,0.04)",
         borderRadius: "20px",
         padding: "20px",
@@ -42,82 +123,7 @@ export default function TemperatureChart({ data }) {
         minWidth: 0
       }}
     >
-      <LineChart
-        width={chartWidth}
-        height={420}
-        data={chartData}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 80,
-          bottom: 80
-        }}
-      >
-        {/* Grid */}
-        <CartesianGrid
-          strokeDasharray="3 3"
-          opacity={0.15}
-        />
-
-        {/* Y Axis - Temperature */}
-        <YAxis
-          domain={[minTemp, maxTemp]}
-          tickCount={6}
-          tick={{ fill: "#e8eaf6", fontSize: 12 }}
-          axisLine={{ stroke: "#e8eaf6" }}
-          tickLine={{ stroke: "#e8eaf6" }}
-          allowDecimals={true}
-          width={70}
-          label={{
-            value: "Temperature (°C)",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#e8eaf6",
-            fontSize: 14,
-            offset: 10
-          }}
-        />
-
-        {/* X Axis - Time */}
-        <XAxis
-          dataKey="time"
-          tick={{ fill: "#e8eaf6", fontSize: 11 }}
-          axisLine={{ stroke: "#e8eaf6" }}
-          tickLine={{ stroke: "#e8eaf6" }}
-          height={80}
-          angle={-40}
-          textAnchor="end"
-          tickMargin={10}
-        />
-
-        {/* Tooltip */}
-        <Tooltip
-          formatter={(value) => [`${value} °C`, "Temperature"]}
-          labelFormatter={(label) => `Time: ${label}`}
-          contentStyle={{
-            backgroundColor: "#1a1f3a",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: "10px",
-            color: "#fff"
-          }}
-        />
-
-        {/* Line */}
-        <Line
-          type="monotone"
-          dataKey="temperature"
-          stroke="#ff6b6b"
-          strokeWidth={3}
-          dot={{
-            r: 5,
-            fill: "#ff6b6b",
-            strokeWidth: 0
-          }}
-          activeDot={{
-            r: 7
-          }}
-        />
-      </LineChart>
+      <Line data={chartData} options={options} />
     </div>
   );
 }
