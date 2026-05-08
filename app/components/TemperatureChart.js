@@ -64,14 +64,9 @@ export default function TemperatureChart({ data }) {
 
         {/* Y Axis - Temperature */}
         <YAxis
-            stroke="#e8eaf6"
             domain={[minTemp, maxTemp]}
-            tickCount={6}
-            tick={{ fill: "#e8eaf6", fontSize: 12 }}
             axisLine={{ stroke: "#e8eaf6" }}
-            tickLine={{ stroke: "#e8eaf6" }}
             allowDecimals={true}
-            width={70}
             label={{
                 value: "Temperature (°C)",
                 angle: -90,
@@ -83,13 +78,9 @@ export default function TemperatureChart({ data }) {
         {/* X Axis - Time (vertical labels) */}
         <XAxis
             dataKey="time"
-            tick={{ fill: "#e8eaf6", fontSize: 11 }}
             axisLine={{ stroke: "#e8eaf6" }}
-            tickLine={{ stroke: "#e8eaf6" }}
-            height={80}
             angle={-90}
             textAnchor="end"
-            tickMargin={10}
         />
 
         {/* Tooltip */}
