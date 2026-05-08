@@ -51,11 +51,10 @@ export default function TemperatureChart({ data }) {
         data={chartData}
         margin={{
           top: 20,
-          right: 80,
-          left: 30,
-          bottom: 30
+          right: 30,
+          left: 80,
+          bottom: 80
         }}
-        layout="vertical"
       >
           {/* Grid */}
         <CartesianGrid
@@ -63,19 +62,8 @@ export default function TemperatureChart({ data }) {
           opacity={0.15}
         />
 
-        {/* Y Axis - Time labels (vertical) */}
+        {/* Y Axis - Temperature */}
         <YAxis
-            dataKey="time"
-            type="category"
-            tick={{ fill: "#e8eaf6", fontSize: 11 }}
-            axisLine={{ stroke: "#e8eaf6" }}
-            tickLine={{ stroke: "#e8eaf6" }}
-            width={80}
-        />
-
-        {/* X Axis - Temperature (horizontal) */}
-        <XAxis
-            type="number"
             stroke="#e8eaf6"
             domain={[minTemp, maxTemp]}
             tickCount={6}
@@ -83,11 +71,25 @@ export default function TemperatureChart({ data }) {
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
             allowDecimals={true}
+            width={70}
             label={{
                 value: "Temperature (°C)",
-                position: "insideBottomRight",
-                offset: -10
+                angle: -90,
+                position: "insideLeft",
+                offset: 10
             }}
+        />
+
+        {/* X Axis - Time (vertical labels) */}
+        <XAxis
+            dataKey="time"
+            tick={{ fill: "#e8eaf6", fontSize: 11 }}
+            axisLine={{ stroke: "#e8eaf6" }}
+            tickLine={{ stroke: "#e8eaf6" }}
+            height={80}
+            angle={-90}
+            textAnchor="end"
+            tickMargin={10}
         />
 
         {/* Tooltip */}
