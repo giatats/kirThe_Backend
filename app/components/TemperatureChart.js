@@ -43,7 +43,7 @@ export default function TemperatureChart({ data }) {
       }}
     >
       <LineChart
-        width={1000}
+        width={1500}
         height={420}
         data={chartData}
         margin={{
@@ -61,37 +61,33 @@ export default function TemperatureChart({ data }) {
 
         {/* X Axis */}
         <XAxis
-          dataKey="time"
-          stroke="#e8eaf6"
-          tick={{ fill: "#e8eaf6", fontSize: 12 }}
-          axisLine={{ stroke: "#e8eaf6" }}
-          tickLine={{ stroke: "#e8eaf6" }}
-          interval="preserveStartEnd"
-          label={{
-            value: "Time",
-            position: "bottom",
-            offset: 20,
-            fill: "#e8eaf6",
-            fontSize: 14
-          }}
+            dataKey="time"
+            interval={0}
+            angle={-40}
+            textAnchor="end"
+            height={70}
+            tick={{ fill: "#e8eaf6", fontSize: 11 }}
         />
 
         {/* Y Axis */}
         <YAxis
-          stroke="#e8eaf6"
-          domain={[minTemp, maxTemp]}
-          tickCount={6}
-          tick={{ fill: "#e8eaf6", fontSize: 12 }}
-          axisLine={{ stroke: "#e8eaf6" }}
-          tickLine={{ stroke: "#e8eaf6" }}
-          label={{
-            value: "Temperature (°C)",
-            angle: -90,
-            position: "insideLeft",
-            fill: "#e8eaf6",
-            fontSize: 14
-          }}
-        />
+            stroke="#e8eaf6"
+            domain={[minTemp, maxTemp]}
+            tickCount={6}
+            interval={0}
+            tick={{ fill: "#e8eaf6", fontSize: 12 }}
+            axisLine={{ stroke: "#e8eaf6" }}
+            tickLine={{ stroke: "#e8eaf6" }}
+            allowDecimals={true}
+            width={60}
+            label={{
+                value: "Temperature (°C)",
+                angle: -90,
+                position: "insideLeft",
+                fill: "#e8eaf6",
+                fontSize: 14
+            }}
+            />
 
         {/* Tooltip */}
         <Tooltip
