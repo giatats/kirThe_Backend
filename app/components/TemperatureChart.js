@@ -64,8 +64,6 @@ export default function TemperatureChart({ data }) {
 
         {/* Y Axis */}
         <YAxis
-            yAxisId="left"
-            orientation="left"
             type="number"
             stroke="#e8eaf6"
             domain={[minTemp, maxTemp]}
@@ -86,8 +84,6 @@ export default function TemperatureChart({ data }) {
 
         {/* X Axis */}
         <XAxis
-            xAxisId="bottom"
-            orientation="bottom"
             type="category"
             dataKey="time"
             tick={{ fill: "#e8eaf6", fontSize: 11 }}
@@ -112,8 +108,6 @@ export default function TemperatureChart({ data }) {
 
         {/* Line */}
         <Line
-          yAxisId="left"
-          xAxisId="bottom"
           type="monotone"
           dataKey="temperature"
           stroke="#ff6b6b"
