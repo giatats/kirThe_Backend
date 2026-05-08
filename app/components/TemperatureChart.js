@@ -24,11 +24,8 @@ export default function TemperatureChart({ data }) {
 
   // Calculate Y-axis limits
   const temps = chartData.map((d) => d.temperature);
-
   const minTemp = Math.floor(Math.min(...temps)) - 1;
   const maxTemp = Math.ceil(Math.max(...temps)) + 1;
-
-  console.log("TemperatureChart chartData:", chartData, { minTemp, maxTemp });
 
   const chartWidth = Math.max(900, chartData.length * 140);
 
@@ -56,7 +53,7 @@ export default function TemperatureChart({ data }) {
           bottom: 80
         }}
       >
-          {/* Grid */}
+        {/* Grid */}
         <CartesianGrid
           strokeDasharray="3 3"
           opacity={0.15}
@@ -64,23 +61,33 @@ export default function TemperatureChart({ data }) {
 
         {/* Y Axis - Temperature */}
         <YAxis
-            domain={[minTemp, maxTemp]}
-            axisLine={{ stroke: "#e8eaf6" }}
-            allowDecimals={true}
-            label={{
-                value: "Temperature (°C)",
-                angle: -90,
-                position: "insideLeft",
-                offset: 10
-            }}
+          domain={[minTemp, maxTemp]}
+          tickCount={6}
+          tick={{ fill: "#e8eaf6", fontSize: 12 }}
+          axisLine={{ stroke: "#e8eaf6" }}
+          tickLine={{ stroke: "#e8eaf6" }}
+          allowDecimals={true}
+          width={70}
+          label={{
+            value: "Temperature (°C)",
+            angle: -90,
+            position: "insideLeft",
+            fill: "#e8eaf6",
+            fontSize: 14,
+            offset: 10
+          }}
         />
 
-        {/* X Axis - Time (vertical labels) */}
+        {/* X Axis - Time */}
         <XAxis
-            dataKey="time"
-            axisLine={{ stroke: "#e8eaf6" }}
-            angle={-90}
-            textAnchor="end"
+          dataKey="time"
+          tick={{ fill: "#e8eaf6", fontSize: 11 }}
+          axisLine={{ stroke: "#e8eaf6" }}
+          tickLine={{ stroke: "#e8eaf6" }}
+          height={80}
+          angle={-40}
+          textAnchor="end"
+          tickMargin={10}
         />
 
         {/* Tooltip */}
@@ -100,19 +107,14 @@ export default function TemperatureChart({ data }) {
           type="monotone"
           dataKey="temperature"
           stroke="#ff6b6b"
-          strokeWidth={5}
-          isAnimationActive={false}
+          strokeWidth={3}
           dot={{
-            r: 8,
+            r: 5,
             fill: "#ff6b6b",
-            stroke: "#fff",
-            strokeWidth: 2
+            strokeWidth: 0
           }}
           activeDot={{
-            r: 9,
-            fill: "#fff",
-            stroke: "#ff6b6b",
-            strokeWidth: 2
+            r: 7
           }}
         />
       </LineChart>
