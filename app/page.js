@@ -21,10 +21,9 @@ export default function TemperatureDashboard() {
   useEffect(() => {
     fetchData(selectedDate);
 
-    // refresh every minute
     const interval = setInterval(() => {
       fetchData(selectedDate);
-    }, 60000);
+    }, 60000); // refresh every minute
 
     return () => clearInterval(interval);
   }, [selectedDate]);
@@ -40,15 +39,20 @@ export default function TemperatureDashboard() {
       const response = await fetch(url);
       const result = await response.json();
 
-      if (result.success) {
-        setData(result.data || []);
-        calculateStats(result.data || []);
+      if (result.success && result.data) {
+        const readings = result.data;
+
+        setData(readings);
+        calculateStats(readings);
+      } else {
+        setData([]);
       }
 
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
       setLoading(false);
+      setData([]);
     }
   };
 
@@ -69,9 +73,7 @@ export default function TemperatureDashboard() {
       current: readings[0],
       min: Math.min(...temps).toFixed(1),
       max: Math.max(...temps).toFixed(1),
-      avg: (
-        temps.reduce((a, b) => a + b, 0) / temps.length
-      ).toFixed(1)
+      avg: (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1)
     });
   };
 
@@ -85,7 +87,7 @@ export default function TemperatureDashboard() {
       overflow: 'hidden'
     }}>
 
-      {/* Background blur effects */}
+      {/* Background glow */}
       <div style={{
         position: 'absolute',
         top: '10%',
@@ -111,14 +113,6 @@ export default function TemperatureDashboard() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@700&display=swap');
 
-        .stat-card {
-          transition: all 0.25s ease;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-4px);
-        }
-
         input[type="date"]::-webkit-calendar-picker-indicator {
           filter: invert(1);
           cursor: pointer;
@@ -134,19 +128,18 @@ export default function TemperatureDashboard() {
       }}>
 
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '16px',
-            marginBottom: '20px'
+            marginBottom: '10px'
           }}>
-            <Thermometer size={48} color="#ff6b6b" strokeWidth={2.5} />
+            <Thermometer size={48} color="#ff6b6b" />
 
             <h1 style={{
               fontSize: '56px',
               fontFamily: '"Space Mono", monospace',
-              fontWeight: '700',
               margin: 0,
               background: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
               WebkitBackgroundClip: 'text',
@@ -156,31 +149,27 @@ export default function TemperatureDashboard() {
             </h1>
           </div>
 
-          <p style={{
-            fontSize: '18px',
-            color: '#a0a4b8'
-          }}>
-            ESP32 Sensor Node • Real-time Temperature Tracking
+          <p style={{ color: '#a0a4b8' }}>
+            ESP32 Real-time Temperature Dashboard
           </p>
         </div>
 
         {/* DATE PICKER */}
         <div style={{
-          marginBottom: '32px',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          marginBottom: '30px'
         }}>
           <div style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: '18px',
-            padding: '16px 20px',
             display: 'flex',
             alignItems: 'center',
-            gap: '14px'
+            gap: '10px',
+            background: 'rgba(255,255,255,0.04)',
+            padding: '14px 18px',
+            borderRadius: '14px',
+            border: '1px solid rgba(255,255,255,0.08)'
           }}>
-            <Calendar size={22} color="#6bcbff" />
+            <Calendar size={18} color="#6bcbff" />
 
             <input
               type="date"
@@ -189,258 +178,89 @@ export default function TemperatureDashboard() {
               style={{
                 background: 'transparent',
                 border: 'none',
-                outline: 'none',
-                color: '#e8eaf6',
-                fontSize: '16px',
-                fontFamily: '"DM Sans", sans-serif'
+                color: '#fff',
+                outline: 'none'
               }}
             />
           </div>
         </div>
 
+        {/* CONTENT */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '100px 20px' }}>
-            <Activity size={48} color="#ff6b6b" />
-            <p style={{ marginTop: '20px', fontSize: '18px', color: '#a0a4b8' }}>
-              Loading sensor data...
-            </p>
+          <div style={{ textAlign: 'center', padding: '100px' }}>
+            <Activity size={40} color="#ff6b6b" />
+            <p>Loading data...</p>
           </div>
         ) : data.length === 0 ? (
           <div style={{
+            textAlign: 'center',
+            padding: '80px',
             background: 'rgba(255,255,255,0.03)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '24px',
-            padding: '60px 40px',
-            textAlign: 'center'
+            borderRadius: '20px'
           }}>
-            <Thermometer size={64} color="#666" />
-
-            <h3 style={{
-              fontSize: '24px',
-              marginTop: '20px'
-            }}>
-              No Data Found
-            </h3>
-
-            <p style={{
-              color: '#a0a4b8',
-              fontSize: '16px'
-            }}>
-              No readings available for the selected date.
-            </p>
+            <Thermometer size={60} color="#666" />
+            <h3>No Data for Selected Date</h3>
+            <p style={{ color: '#a0a4b8' }}>Try another day.</p>
           </div>
         ) : (
           <>
             {/* STATS */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '24px',
-              marginBottom: '48px'
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '20px',
+              marginBottom: '40px'
             }}>
 
-              {/* Current */}
-              <div className="stat-card" style={{
-                background: 'rgba(255,107,107,0.1)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,107,107,0.3)',
-                borderRadius: '20px',
-                padding: '32px 28px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '16px'
-                }}>
-                  <Thermometer size={24} color="#ff6b6b" />
-                  <span style={{
-                    fontSize: '14px',
-                    color: '#ff6b6b',
-                    fontWeight: '600'
-                  }}>
-                    CURRENT
-                  </span>
-                </div>
-
-                <div style={{
-                  fontSize: '52px',
-                  fontWeight: '700',
-                  fontFamily: '"Space Mono", monospace',
-                  color: '#ff6b6b'
-                }}>
+              <div style={{ padding: 20, background: 'rgba(255,107,107,0.1)', borderRadius: 16 }}>
+                <div>Current</div>
+                <div style={{ fontSize: 32, color: '#ff6b6b' }}>
                   {stats.current?.temperature}°C
                 </div>
-
-                <div style={{
-                  marginTop: '12px',
-                  fontSize: '13px',
-                  color: '#a0a4b8',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}>
-                  <Clock size={14} />
-                  {stats.current?.time}
-                </div>
               </div>
 
-              {/* Average */}
-              <div className="stat-card" style={{
-                background: 'rgba(255,255,255,0.03)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '20px',
-                padding: '32px 28px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '16px'
-                }}>
-                  <Activity size={24} color="#6bcbff" />
-                  <span style={{
-                    fontSize: '14px',
-                    color: '#6bcbff',
-                    fontWeight: '600'
-                  }}>
-                    AVERAGE
-                  </span>
-                </div>
-
-                <div style={{
-                  fontSize: '52px',
-                  fontWeight: '700',
-                  fontFamily: '"Space Mono", monospace'
-                }}>
-                  {stats.avg}°C
-                </div>
+              <div style={{ padding: 20, background: 'rgba(255,255,255,0.05)', borderRadius: 16 }}>
+                <div>Avg</div>
+                <div style={{ fontSize: 32 }}>{stats.avg}°C</div>
               </div>
 
-              {/* Minimum */}
-              <div className="stat-card" style={{
-                background: 'rgba(255,255,255,0.03)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '20px',
-                padding: '32px 28px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '16px'
-                }}>
-                  <TrendingUp size={24} color="#a0a4b8" style={{ transform: 'rotate(180deg)' }} />
-                  <span style={{
-                    fontSize: '14px',
-                    color: '#a0a4b8',
-                    fontWeight: '600'
-                  }}>
-                    MINIMUM
-                  </span>
-                </div>
-
-                <div style={{
-                  fontSize: '52px',
-                  fontWeight: '700',
-                  fontFamily: '"Space Mono", monospace'
-                }}>
-                  {stats.min}°C
-                </div>
+              <div style={{ padding: 20, background: 'rgba(255,255,255,0.05)', borderRadius: 16 }}>
+                <div>Min</div>
+                <div style={{ fontSize: 32 }}>{stats.min}°C</div>
               </div>
 
-              {/* Maximum */}
-              <div className="stat-card" style={{
-                background: 'rgba(255,255,255,0.03)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '20px',
-                padding: '32px 28px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '16px'
-                }}>
-                  <TrendingUp size={24} color="#feca57" />
-                  <span style={{
-                    fontSize: '14px',
-                    color: '#feca57',
-                    fontWeight: '600'
-                  }}>
-                    MAXIMUM
-                  </span>
-                </div>
-
-                <div style={{
-                  fontSize: '52px',
-                  fontWeight: '700',
-                  fontFamily: '"Space Mono", monospace'
-                }}>
-                  {stats.max}°C
-                </div>
+              <div style={{ padding: 20, background: 'rgba(255,255,255,0.05)', borderRadius: 16 }}>
+                <div>Max</div>
+                <div style={{ fontSize: 32 }}>{stats.max}°C</div>
               </div>
+
             </div>
 
-            {/* CHART */}
+            {/* GRAPH */}
             <TemperatureChart data={data} />
 
             {/* TABLE */}
-            <div style={{
-              marginTop: '40px',
-              background: 'rgba(255,255,255,0.03)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '24px',
-              padding: '36px 28px'
-            }}>
-              <h3 style={{
-                fontSize: '20px',
-                marginBottom: '24px'
-              }}>
-                Readings for {selectedDate}
-              </h3>
+            <div style={{ marginTop: 40 }}>
+              <h3>Readings ({selectedDate})</h3>
 
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{
-                  width: '100%',
-                  borderCollapse: 'collapse'
-                }}>
-                  <thead>
-                    <tr>
-                      <th style={{ padding: '12px', textAlign: 'left' }}>Temperature</th>
-                      <th style={{ padding: '12px', textAlign: 'left' }}>Date</th>
-                      <th style={{ padding: '12px', textAlign: 'left' }}>Time</th>
+              <table style={{ width: '100%', marginTop: 10 }}>
+                <thead>
+                  <tr>
+                    <th>Temp</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.slice(0, 10).map((r, i) => (
+                    <tr key={i}>
+                      <td>{r.temperature}°C</td>
+                      <td>{r.date}</td>
+                      <td>{r.time}</td>
                     </tr>
-                  </thead>
-
-                  <tbody>
-                    {data.slice(0, 10).map((reading, idx) => (
-                      <tr key={idx}>
-                        <td style={{
-                          padding: '16px 12px',
-                          color: '#ff6b6b',
-                          fontWeight: '600'
-                        }}>
-                          {reading.temperature}°C
-                        </td>
-
-                        <td style={{ padding: '16px 12px' }}>
-                          {reading.date}
-                        </td>
-
-                        <td style={{ padding: '16px 12px' }}>
-                          {reading.time}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </>
         )}
