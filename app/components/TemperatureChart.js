@@ -62,11 +62,15 @@ export default function TemperatureChart({ data }) {
         {/* X Axis */}
         <XAxis
             dataKey="time"
-            interval={0}
+            interval="preserveStartEnd"
+            minTickGap={20}
             angle={-40}
             textAnchor="end"
             height={70}
             tick={{ fill: "#e8eaf6", fontSize: 11 }}
+            axisLine={{ stroke: "#e8eaf6" }}
+            tickLine={{ stroke: "#e8eaf6" }}
+            padding={{ left: 20, right: 20 }}
         />
 
         {/* Y Axis */}
@@ -79,7 +83,7 @@ export default function TemperatureChart({ data }) {
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
             allowDecimals={true}
-            width={60}
+            width={70}
             label={{
                 value: "Temperature (°C)",
                 angle: -90,
@@ -87,7 +91,7 @@ export default function TemperatureChart({ data }) {
                 fill: "#e8eaf6",
                 fontSize: 14
             }}
-            />
+        />
 
         {/* Tooltip */}
         <Tooltip
