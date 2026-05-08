@@ -28,6 +28,8 @@ export default function TemperatureChart({ data }) {
   const minTemp = Math.floor(Math.min(...temps)) - 1;
   const maxTemp = Math.ceil(Math.max(...temps)) + 1;
 
+  console.log("TemperatureChart chartData:", chartData, { minTemp, maxTemp });
+
   const chartWidth = Math.max(900, chartData.length * 140);
 
   return (
@@ -51,7 +53,7 @@ export default function TemperatureChart({ data }) {
           top: 20,
           right: 30,
           left: 50,
-          bottom: 70
+          bottom: 50
         }}
       >
           {/* Grid */}
@@ -63,28 +65,20 @@ export default function TemperatureChart({ data }) {
         {/* X Axis */}
         <XAxis
             dataKey="time"
-            type="category"
-            orientation="bottom"
-            interval={0}
-            minTickGap={20}
-            angle={-40}
-            textAnchor="end"
-            height={70}
             tick={{ fill: "#e8eaf6", fontSize: 11 }}
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
             padding={{ left: 20, right: 20 }}
-            tickMargin={12}
+            height={70}
+            angle={-40}
+            textAnchor="end"
         />
 
         {/* Y Axis */}
         <YAxis
-            type="number"
-            orientation="left"
             stroke="#e8eaf6"
-            domain={["dataMin - 1", "dataMax + 1"]}
+            domain={[minTemp, maxTemp]}
             tickCount={6}
-            interval="preserveStartEnd"
             tick={{ fill: "#e8eaf6", fontSize: 12 }}
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
@@ -117,14 +111,20 @@ export default function TemperatureChart({ data }) {
           type="monotone"
           dataKey="temperature"
           stroke="#ff6b6b"
-          strokeWidth={3}
+          strokeWidth={5}
+          isAnimationActive={false}
+          strokeOpacity={1}
           dot={{
-            r: 5,
+            r: 8,
             fill: "#ff6b6b",
-            strokeWidth: 0
+            stroke: "#fff",
+            strokeWidth: 2
           }}
           activeDot={{
-            r: 7
+            r: 9,
+            fill: "#fff",
+            stroke: "#ff6b6b",
+            strokeWidth: 2
           }}
         />
       </LineChart>
