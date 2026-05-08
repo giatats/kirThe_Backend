@@ -36,21 +36,32 @@ export default function TemperatureDashboard() {
         url += `?date=${date}`;
       }
 
+      console.log('🔍 Fetching URL:', url);
+      console.log('🔍 Selected date:', date);
+
       const response = await fetch(url);
       const result = await response.json();
+
+      console.log('📦 API Response:', result);
+      console.log('📦 Data array:', result.data);
+      console.log('📦 Data length:', result.data?.length);
 
       if (result.success && result.data) {
         const readings = result.data;
 
+        console.log('✅ Setting data with', readings.length, 'readings');
+        console.log('📊 First reading:', readings[0]);
+
         setData(readings);
         calculateStats(readings);
       } else {
+        console.warn('⚠️ No data in response');
         setData([]);
       }
 
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('❌ Error fetching data:', error);
       setLoading(false);
       setData([]);
     }
@@ -185,6 +196,20 @@ export default function TemperatureDashboard() {
           </div>
         </div>
 
+        {/* DEBUG INFO */}
+        <div style={{
+          background: 'rgba(255,255,255,0.05)',
+          padding: '10px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+          fontSize: '12px',
+          fontFamily: 'monospace'
+        }}>
+          <div>Selected Date: {selectedDate}</div>
+          <div>Data Length: {data.length}</div>
+          <div>Loading: {loading.toString()}</div>
+        </div>
+
         {/* CONTENT */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '100px' }}>
@@ -240,30 +265,6 @@ export default function TemperatureDashboard() {
             <div style={{ marginTop: 40 }}>
               <TemperatureChart data={data} />
             </div>
-
-            {/* TABLE
-            <div style={{ marginTop: 40 }}>
-              <h3>Readings ({selectedDate})</h3>
-
-              <table style={{ width: '100%', marginTop: 10 }}>
-                <thead>
-                  <tr>
-                    <th>Temp</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.slice(0, 10).map((r, i) => (
-                    <tr key={i}>
-                      <td>{r.temperature}°C</td>
-                      <td>{r.date}</td>
-                      <td>{r.time}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> */}
           </>
         )}
       </div>
