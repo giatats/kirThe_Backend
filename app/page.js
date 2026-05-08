@@ -104,7 +104,7 @@ export default function TemperatureDashboard() {
       fontFamily: '"DM Sans", -apple-system, sans-serif',
       color: '#e8eaf6',
       position: 'relative',
-      overflow: 'hidden'
+      overflowX: 'hidden'
     }}>
 
       {/* Background glow */}

@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
@@ -11,46 +11,65 @@ import {
 } from "recharts";
 
 export default function TemperatureChart({ data }) {
-  console.log("CHART DATA:", data);
-
-  if (!Array.isArray(data)) {
-    return <div style={{ color: "red" }}>No chart data (not array)</div>;
-  }
-
-  if (data.length === 0) {
-    return <div style={{ color: "#aaa" }}>No data for chart</div>;
-  }
+  if (!data || data.length === 0) return null;
 
   const chartData = data.map((item) => ({
-    name: item.time,
-    temp: Number(item.temperature)
+    time: item.time,
+    temperature: Number(item.temperature)
   }));
 
   return (
-    <div style={{
-      width: "100%",
-      height: 400,
-      background: "rgba(255,255,255,0.02)",
-      borderRadius: 12,
-      padding: 10
-    }}>
+    <div
+      style={{
+        width: "100%",
+        height: 400,
+        background: "rgba(255,255,255,0.04)",
+        borderRadius: "20px",
+        padding: "20px",
+        marginTop: "20px",
+        border: "1px solid rgba(255,255,255,0.08)"
+      }}
+    >
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-
-          <XAxis dataKey="name" />
-          <YAxis />
-
-          <Tooltip />
-
-          <Area
-            type="monotone"
-            dataKey="temp"
-            stroke="#ff6b6b"
-            fill="#ff6b6b33"
-            strokeWidth={2}
+        <LineChart data={chartData}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            opacity={0.15}
           />
-        </AreaChart>
+
+          <XAxis
+            dataKey="time"
+            stroke="#a0a4b8"
+          />
+
+          <YAxis
+            stroke="#a0a4b8"
+            domain={['auto', 'auto']}
+          />
+
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#1a1f3a",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "10px",
+              color: "#fff"
+            }}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="temperature"
+            stroke="#ff6b6b"
+            strokeWidth={3}
+            dot={{
+              r: 5,
+              fill: "#ff6b6b"
+            }}
+            activeDot={{
+              r: 7
+            }}
+          />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );
