@@ -6,7 +6,8 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid
+  CartesianGrid,
+  ResponsiveContainer
 } from "recharts";
 
 export default function TemperatureChart({ data }) {
@@ -42,18 +43,17 @@ export default function TemperatureChart({ data }) {
         justifyContent: "center"
       }}
     >
-      <LineChart
-        width={1500}
-        height={420}
-        data={chartData}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 30,
-          bottom: 50
-        }}
-      >
-        {/* Grid */}
+      <ResponsiveContainer width="100%" height={420}>
+        <LineChart
+          data={chartData}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 30,
+            bottom: 50
+          }}
+        >
+          {/* Grid */}
         <CartesianGrid
           strokeDasharray="3 3"
           opacity={0.15}
@@ -121,6 +121,7 @@ export default function TemperatureChart({ data }) {
           }}
         />
       </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
