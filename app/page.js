@@ -215,8 +215,7 @@ export default function TemperatureDashboard() {
           fontFamily: 'monospace'
         }}>
           <div>Selected Date: {selectedDate}</div>
-          <div>Data Length: {data.length}</div>
-          <div>Loading: {loading.toString()}</div>
+          <div>Data Points: {data.length}</div>
         </div>
 
         {/* CONTENT */}
