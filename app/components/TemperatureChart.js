@@ -50,8 +50,8 @@ export default function TemperatureChart({ data }) {
         margin={{
           top: 20,
           right: 30,
-          left: 30,
-          bottom: 50
+          left: 50,
+          bottom: 70
         }}
       >
           {/* Grid */}
@@ -63,7 +63,9 @@ export default function TemperatureChart({ data }) {
         {/* X Axis */}
         <XAxis
             dataKey="time"
-            interval="preserveStartEnd"
+            type="category"
+            orientation="bottom"
+            interval={0}
             minTickGap={20}
             angle={-40}
             textAnchor="end"
@@ -72,12 +74,15 @@ export default function TemperatureChart({ data }) {
             axisLine={{ stroke: "#e8eaf6" }}
             tickLine={{ stroke: "#e8eaf6" }}
             padding={{ left: 20, right: 20 }}
+            tickMargin={12}
         />
 
         {/* Y Axis */}
         <YAxis
+            type="number"
+            orientation="left"
             stroke="#e8eaf6"
-            domain={[minTemp, maxTemp]}
+            domain={["dataMin - 1", "dataMax + 1"]}
             tickCount={6}
             interval="preserveStartEnd"
             tick={{ fill: "#e8eaf6", fontSize: 12 }}
@@ -90,7 +95,8 @@ export default function TemperatureChart({ data }) {
                 angle: -90,
                 position: "insideLeft",
                 fill: "#e8eaf6",
-                fontSize: 14
+                fontSize: 14,
+                dy: 0
             }}
         />
 
